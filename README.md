@@ -11,29 +11,63 @@ and the Flutter guide for
 [developing packages and plugins](https://flutter.dev/developing-packages).
 -->
 
-TODO: Put a short description of the package here that helps potential users
-know whether this package might be useful for them.
+A simple package with a carousel widget having web look and feel. It let's you pass any number of widgets(yeah widgets, not just images) to be displayed. It also gives you control over how much of the cards containing your widgets you want to overlap(or not). It's lightweight and doesn't depend on any other packages. 
 
-## Features
-
-TODO: List what your package can do. Maybe include images, gifs, or videos.
-
-## Getting started
-
-TODO: List prerequisites and provide or point to information on how to
-start using the package.
 
 ## Usage
 
-TODO: Include short and useful examples for package users. Add longer examples
-to `/example` folder.
+![Alt Text](./demo/gif-0-9-0-3.gif)
 
-```dart
-const like = 'sample';
+```
+RotatingCarousel(
+    panels: [
+    ...
+    ],
+    height: 250,
+    width: 350,
+    minRatio: 0.9,
+    overlapRatio: -0.3,
+)
+```
+![Alt Text](./demo/gif-0-7-0-7.gif)
+
+```
+RotatingCarousel(
+    panels: [
+    ...
+    ],
+    height: 250,
+    width: 350,
+    minRatio: 0.7,
+    overlapRatio: 0.7,
+)
 ```
 
-## Additional information
+![Alt Text](./demo/gif-0-9-0-1(1).gif)
 
-TODO: Tell users more about the package: where to find more information, how to
-contribute to the package, how to file issues, what response they can expect
-from the package authors, and more.
+```
+RotatingCarousel(
+    panels: [
+    ...
+    ],
+    height: 250,
+    width: 350,
+    minRatio: 0.9,
+    overlapRatio: -0.1,
+)
+```
+
+![Alt Text](./demo/gif-0-9-0-1.gif)
+
+```
+RotatingCarousel(
+    panels: [
+    ...
+    ],
+    height: 250,
+    width: 350,
+    minRatio: 0.9,
+    overlapRatio: 0.1,
+)
+```
+

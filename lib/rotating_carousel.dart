@@ -7,12 +7,12 @@ class RotatingCarousel extends StatefulWidget {
   final double width;
   final double height;
   final List<Widget> panels;
-  final double minFactor;
+  final double minRatio;
   final double overlapRatio;
   final int animationDurationInMilliseconds;
   const RotatingCarousel({
     Key? key,
-    this.minFactor = 0.9,
+    this.minRatio = 0.9,
     this.overlapRatio = 0.1,
     this.animationDurationInMilliseconds = 350,
     required this.width,
@@ -74,11 +74,10 @@ class _RotatingCarouselState extends State<RotatingCarousel>
     if (amount == 1) {
       initialResizeFactors = [1];
     } else if (amount == 2) {
-      initialResizeFactors = [widget.minFactor, 1];
+      initialResizeFactors = [widget.minRatio, 1];
     } else {
-      var gap = (1 - widget.minFactor) / (middleIndex);
-      assert(
-          gap < widget.minFactor, "Increase your min Factor and hot restart");
+      var gap = (1 - widget.minRatio) / (middleIndex);
+      assert(gap < widget.minRatio, "Increase your min Factor and hot restart");
       List<double> resizers = List<double>.filled(amount, 1);
       for (var index = middleIndex - 1; index >= 0; index--) {
         resizers[index] = resizers[index + 1] - gap;
@@ -93,7 +92,7 @@ class _RotatingCarouselState extends State<RotatingCarousel>
   double getMaxWidth() {
     return widget.width /
         (((1 - widget.overlapRatio) *
-                (((widget.minFactor + 1) * ((amount) / 2)) - 1)) +
+                (((widget.minRatio + 1) * ((amount) / 2)) - 1)) +
             1);
   }
 

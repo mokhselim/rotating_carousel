@@ -37,23 +37,11 @@ class MyApp extends StatelessWidget {
                   "assets/images/person2.jpeg",
                   fit: BoxFit.fill,
                 ),
-                Container(
-                  // height: 100,
-                  decoration: const BoxDecoration(color: Colors.green),
-                ),
-                Image.asset(
-                  "assets/images/person.jpeg",
-                  fit: BoxFit.fill,
-                ),
-                // Image.asset(
-                //   "assets/images/she.jpeg",
-                //   fit: BoxFit.fill,
-                // )
               ],
               height: 250,
               width: 350,
-              minFactor: 0.9,
-              overlapRatio: 0.1,
+              minRatio: 0.9,
+              overlapRatio: -0.3,
             ),
           ),
         ),
