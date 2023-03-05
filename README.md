@@ -17,7 +17,7 @@ A simple package with a carousel widget having web look and feel. It let's you p
 ## Usage
 The `minRatio` is the ratio of the width of the smallest card to the width of the largest(i.e middle) card. If we pass a positive `overlapRatio` then it tells the RotatingCarousel widget how much of each cards' width we want to overlap with its corresponding neighbouring card. But if we instead pass a negative value they will spaced apart with the same value rather than overlap.
 
-<img src="./demo/gif-0-9-0-3.gif" width="400" height="268"/>
+<img src="https://github.com/dalyathan/rotating_carousel/blob/master/demo/gif-0-9-0-3.gif?raw=true" width="400" height="268"/>
 
 ```
 RotatingCarousel(
@@ -30,7 +30,7 @@ RotatingCarousel(
     overlapRatio: -0.3,
 )
 ```
-<img src="./demo/gif-0-7-0-7.gif" width="400" height="268"/>
+<img src="https://github.com/dalyathan/rotating_carousel/blob/master/demo/gif-0-7-0-7.gif?raw=true" width="400" height="268"/>
 
 
 ```
@@ -45,7 +45,7 @@ RotatingCarousel(
 )
 ```
 
-<img src="./demo/gif-0-9-0-1(1).gif" width="400" height="268"/>
+<img src="https://github.com/dalyathan/rotating_carousel/blob/master/demo/gif-0-9-0-1(1).gif?raw=true" width="400" height="268"/>
 
 
 ```
@@ -60,7 +60,7 @@ RotatingCarousel(
 )
 ```
 
-<img src="./demo/gif-0-9-0-1.gif" width="400" height="268"/>
+<img src="https://github.com/dalyathan/rotating_carousel/blob/master/demo/gif-0-9-0-1.gif?raw=true" width="400" height="268"/>
 
 
 ```
