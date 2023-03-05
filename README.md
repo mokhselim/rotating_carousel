@@ -15,8 +15,9 @@ A simple package with a carousel widget having web look and feel. It let's you p
 
 
 ## Usage
+The `minRatio` is the ratio of the width of the smallest card to the width of the largest(i.e middle) card. If we pass a positive `overlapRatio` then it tells the RotatingCarousel widget how much of each cards' width we want to overlap with its corresponding neighbouring card. But if we instead pass a negative value they will spaced apart with the same value rather than overlap.
 
-![Alt Text](./demo/gif-0-9-0-3.gif)
+<img src="./demo/gif-0-9-0-3.gif" width="400" height="268"/>
 
 ```
 RotatingCarousel(
@@ -29,7 +30,8 @@ RotatingCarousel(
     overlapRatio: -0.3,
 )
 ```
-![Alt Text](./demo/gif-0-7-0-7.gif)
+<img src="./demo/gif-0-7-0-7.gif" width="400" height="268"/>
+
 
 ```
 RotatingCarousel(
@@ -43,7 +45,8 @@ RotatingCarousel(
 )
 ```
 
-![Alt Text](./demo/gif-0-9-0-1(1).gif)
+<img src="./demo/gif-0-9-0-1(1).gif" width="400" height="268"/>
+
 
 ```
 RotatingCarousel(
@@ -57,7 +60,8 @@ RotatingCarousel(
 )
 ```
 
-![Alt Text](./demo/gif-0-9-0-1.gif)
+<img src="./demo/gif-0-9-0-1.gif" width="400" height="268"/>
+
 
 ```
 RotatingCarousel(
