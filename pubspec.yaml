@@ -1,5 +1,6 @@
 name: rotating_carousel
 description: A package for implementing a carousel like look and feel in flutter apps.
+repository: https://github.com/dalyathan/rotating_carousel
 version: 0.0.1
 homepage:
 
