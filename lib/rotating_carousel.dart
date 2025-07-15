@@ -1,6 +1,6 @@
+import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:rotating_carousel/render.dart';
-
 import 'panel_container.dart';
 
 class RotatingCarousel extends StatefulWidget {
@@ -10,11 +10,18 @@ class RotatingCarousel extends StatefulWidget {
   final double minRatio;
   final double overlapRatio;
   final int animationDurationInMilliseconds;
+  final bool autoScroll;
+  final Duration autoScrollInterval;
+  final double fadeStrength;
+
   const RotatingCarousel({
     Key? key,
     this.minRatio = 0.9,
     this.overlapRatio = 0.1,
     this.animationDurationInMilliseconds = 350,
+    this.autoScroll = false,
+    this.autoScrollInterval = const Duration(seconds: 3),
+    this.fadeStrength = 0.2,
     required this.width,
     required this.height,
     required this.panels,
@@ -36,19 +43,48 @@ class _RotatingCarouselState extends State<RotatingCarousel>
   late List<double> initialResizeFactors;
   late List<double> currentResizeFactors;
   late AnimationController _animationController;
+  Timer? _autoScrollTimer;
+
   @override
   void initState() {
     super.initState();
     initValues();
+    if (widget.autoScroll) {
+      _startAutoScrollTimer();
+    }
+  }
+
+  @override
+  void dispose() {
+    _autoScrollTimer?.cancel();
+    _animationController.dispose();
+    super.dispose();
   }
 
   @override
   void didUpdateWidget(RotatingCarousel oldWidget) {
     super.didUpdateWidget(oldWidget);
     initValues();
+    if (widget.autoScroll) {
+      _startAutoScrollTimer();
+    } else {
+      _autoScrollTimer?.cancel();
+    }
   }
 
-  initValues() {
+  void _startAutoScrollTimer() {
+    _autoScrollTimer?.cancel();
+    _autoScrollTimer = Timer.periodic(widget.autoScrollInterval, (_) {
+      if (!_animationController.isAnimating) {
+        setState(() {
+          isRight = true;
+        });
+        _animationController.forward();
+      }
+    });
+  }
+
+  void initValues() {
     statefulPanels = widget.panels;
     amount = widget.panels.length;
     middleIndex = ((amount) / 2).ceil() - 1;
@@ -56,21 +92,15 @@ class _RotatingCarouselState extends State<RotatingCarousel>
     initResizeDimensions();
     currentResizeFactors = initialResizeFactors;
     initOffsets = initializeOffset(initialResizeFactors);
-    _animationController = AnimationController(
-        vsync: this,
-        duration:
-            Duration(milliseconds: widget.animationDurationInMilliseconds));
     currentOffsets = initOffsets;
+    _animationController = AnimationController(
+      vsync: this,
+      duration: Duration(milliseconds: widget.animationDurationInMilliseconds),
+    );
     _animationController.addListener(() => animate());
   }
 
-  @override
-  reassemble() {
-    super.reassemble();
-    initValues();
-  }
-
-  initResizeDimensions() {
+  void initResizeDimensions() {
     if (amount == 1) {
       initialResizeFactors = [1];
     } else if (amount == 2) {
@@ -92,7 +122,7 @@ class _RotatingCarouselState extends State<RotatingCarousel>
   double getMaxWidth() {
     return widget.width /
         (((1 - widget.overlapRatio) *
-                (((widget.minRatio + 1) * ((amount) / 2)) - 1)) +
+            (((widget.minRatio + 1) * ((amount) / 2)) - 1)) +
             1);
   }
 
@@ -119,21 +149,33 @@ class _RotatingCarouselState extends State<RotatingCarousel>
   Widget build(BuildContext context) {
     List<PanelContainer> constrainedWidgets = [];
     for (var panelIndex = 0; panelIndex < amount; panelIndex++) {
+      int distanceFromMiddle = (middleIndex - panelIndex).abs();
+      double fadeOpacity =
+      (1.0 - (distanceFromMiddle * widget.fadeStrength)).clamp(0.0, 1.0);
+
       constrainedWidgets.add(PanelContainer(
         maxWidth: panelMaxWidth,
         maxHeight: widget.height,
-        panel: statefulPanels[panelIndex],
+        panel: Opacity(
+          opacity: fadeOpacity,
+          child: statefulPanels[panelIndex],
+        ),
         leftOffset: currentOffsets[panelIndex],
         ratio: currentResizeFactors[panelIndex],
         rightSide: panelIndex > middleIndex,
       ));
     }
+
     return GestureDetector(
       onPanUpdate: (details) async {
+        _autoScrollTimer?.cancel();
         setState(() {
           isRight = details.delta.dx > 0;
         });
         await _animationController.forward();
+        if (widget.autoScroll) {
+          _startAutoScrollTimer();
+        }
       },
       child: Center(
         child: Container(
@@ -153,11 +195,11 @@ class _RotatingCarouselState extends State<RotatingCarousel>
     );
   }
 
-  animate() {
+  void animate() {
     var percent = _animationController.value;
     var newOffsets = [];
     var newFactors = [];
-    // currentResizeFactors
+
     for (var index = 0; index < currentOffsets.length; index++) {
       late int next;
       if (isRight) {
@@ -165,19 +207,21 @@ class _RotatingCarouselState extends State<RotatingCarousel>
       } else {
         next = (currentOffsets.length + index - 1) % currentOffsets.length;
       }
+
       newOffsets.add(((initOffsets[next] - initOffsets[index]) * percent +
-              initOffsets[index])
+          initOffsets[index])
           .abs());
+
       newFactors.add(
           ((initialResizeFactors[next] - initialResizeFactors[index]) *
-                      percent +
-                  initialResizeFactors[index])
+              percent +
+              initialResizeFactors[index])
               .abs());
     }
-    // print(newOffsets);
+
     if (_animationController.isCompleted) {
       _animationController.reset();
-      var panelsShiftedLeft = List<dynamic>.filled(currentOffsets.length, null);
+      var panelsShifted = List<dynamic>.filled(currentOffsets.length, null);
       for (var index = 0; index < amount; index++) {
         late int next;
         if (isRight) {
@@ -185,11 +229,12 @@ class _RotatingCarouselState extends State<RotatingCarousel>
         } else {
           next = (amount + index - 1) % amount;
         }
-        panelsShiftedLeft[next] = statefulPanels[index];
+        panelsShifted[next] = statefulPanels[index];
       }
+
       setState(() {
         currentOffsets = [...initOffsets];
-        statefulPanels = [...panelsShiftedLeft];
+        statefulPanels = [...panelsShifted];
         currentResizeFactors = [...initialResizeFactors];
       });
     } else {
